@@ -55,3 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Electron node deps
+client/node_modules/*
