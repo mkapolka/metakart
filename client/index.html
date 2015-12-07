@@ -2,12 +2,42 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>METAKART</title>
+    <link rel="stylesheet" href="main.css"></link>
+    <link rel="stylesheet" href="photon/css/photon.min.css"></link>
+    <script>window.$ = window.jQuery = require('./ext/jquery-2.1.4.min.js');</script>
+    <script type="text/javascript" src="web.js"></script>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <div class="window">
+      <div class="window-content">
+        <div class="pane-group">
+          <div class="pane-sm sidebar">
+            <h5 class="nav-group-title">Installed Games</h5>
+          </div>
+          <div class="pane" style="overflow: hidden;">
+            <header class="toolbar toolbar-header">
+              <div class="toolbar-actions">
+                <div class="btn-group">
+                  <button id="navbar-back" class="btn btn-default">
+                    <span class="icon icon-left"/>
+                  </button>
+                  <button id="navbar-forward" class="btn btn-default">
+                    <span class="icon icon-right"/>
+                  </button>
+                  <button id="navbar-reload" class="btn btn-default">
+                    <span class="icon icon-cw"/>
+                  </button>
+                </div>
+                <input id="navbar-url" type="text"/>
+              </div>
+            </header>
+            <div class="window-content">
+              <webview id="webview" src="home.html"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

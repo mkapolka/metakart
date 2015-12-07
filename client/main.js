@@ -29,7 +29,7 @@ app.on('ready', function() {
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -37,5 +37,17 @@ app.on('ready', function() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null;
+  });
+
+  mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
+    console.log(item.getFilename());
+    item.setSavePath(`${__dirname}/games/` + item.getFilename());
+    item.on('done', function(e, state) {
+      if (state == "completed") {
+        console.log("Download successful.");
+      } else {
+        console.log("UH OH " + state);
+      }
+    });
   });
 });
