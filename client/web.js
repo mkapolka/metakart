@@ -1,4 +1,5 @@
-console.log(window);
+$ = require("./ext/jquery-2.1.4.min.js");
+
 $(function(){
   $("#navbar-back").click(function() {
     $("#webview")[0].goBack()
@@ -19,11 +20,15 @@ $(function(){
   $("#webview").bind("did-get-response-details", function(e) {
     $("#navbar-url").val(e.target.src);
   })
+
+  console.log("qwerqwerqwer");
+  $("#game-group").html(Handlebars.compile($("#game-entry-template").html())({name: "Asdfquest"}));
 });
 
-function init_game(name, location) {
-  return {
-    name: name,
-    location: location
-  }
+function add_game_entry(game) {
+  var entry = $(Handlebars.compile($("#game-entry-template").html())(game));
+  entry.mousedown(function(e) {
+    $("#webview").attr("src", game.url);
+  });
+  $("#game-group").append(entry);
 }

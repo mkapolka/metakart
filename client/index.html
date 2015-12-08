@@ -5,8 +5,12 @@
     <title>METAKART</title>
     <link rel="stylesheet" href="main.css"></link>
     <link rel="stylesheet" href="photon/css/photon.min.css"></link>
-    <script>window.$ = window.jQuery = require('./ext/jquery-2.1.4.min.js');</script>
+    <script type="text/javascript" src="ext/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="ext/handlebars-v4.0.5.js"></script>
     <script type="text/javascript" src="web.js"></script>
+    <script id="game-entry-template" type="text/x-handlebars-template">
+      <span class="nav-group-item">{{name}}</span>
+    </script>
   </head>
   <body>
     <div class="window">
@@ -14,6 +18,9 @@
         <div class="pane-group">
           <div class="pane-sm sidebar">
             <h5 class="nav-group-title">Installed Games</h5>
+            <div id="game-group">
+              <span class="nav-group-item">Dookis</span>
+            </div>
           </div>
           <div class="pane" style="overflow: hidden;">
             <header class="toolbar toolbar-header">
