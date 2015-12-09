@@ -36,3 +36,14 @@ h1 {
   width: 50%;
   margin: 0 auto;
 }
+
+#game-info-entry {
+  position: absolute;
+  background-color: lightgrey;
+  width: 100%;
+  bottom: 0;
+}
+
+#game-info-entry > form {
+  padding: 25px;
+}

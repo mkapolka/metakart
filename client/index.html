@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8">
     <title>METAKART</title>
-    <link rel="stylesheet" href="main.css"></link>
-    <link rel="stylesheet" href="photon/css/photon.min.css"></link>
+    <link rel="stylesheet" href="main.css"/>
+    <link rel="stylesheet" href="photon/css/photon.min.css"/>
     <script type="text/javascript" src="ext/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="ext/handlebars-v4.0.5.js"></script>
     <script type="text/javascript" src="web.js"></script>
@@ -18,9 +18,7 @@
         <div class="pane-group">
           <div class="pane-sm sidebar">
             <h5 class="nav-group-title">Installed Games</h5>
-            <div id="game-group">
-              <span class="nav-group-item">Dookis</span>
-            </div>
+            <div id="game-group"></div>
           </div>
           <div class="pane" style="overflow: hidden;">
             <header class="toolbar toolbar-header">
@@ -41,6 +39,12 @@
             </header>
             <div class="window-content">
               <webview id="webview" src="home.html"/>
+            </div>
+            <div id="game-info-entry" class="window-content">
+              <form>
+                <label>Game Title: <input id="game-name" type="text" default="Game Title"/></label>
+                <button class="btn btn-primary">Save</button>
+              </form>
             </div>
           </div>
         </div>

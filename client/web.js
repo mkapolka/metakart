@@ -1,4 +1,5 @@
 $ = require("./ext/jquery-2.1.4.min.js");
+const collection = require("./collection.js");
 
 $(function(){
   $("#navbar-back").click(function() {
@@ -21,8 +22,7 @@ $(function(){
     $("#navbar-url").val(e.target.src);
   })
 
-  console.log("qwerqwerqwer");
-  $("#game-group").html(Handlebars.compile($("#game-entry-template").html())({name: "Asdfquest"}));
+  collection.scan_existing_games();
 });
 
 function add_game_entry(game) {

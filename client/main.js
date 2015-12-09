@@ -41,7 +41,6 @@ app.on('ready', function() {
   });
 
   mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
-    console.log(item.getFilename());
     item.setSavePath(`${__dirname}/games/` + item.getFilename());
     item.on('done', function(e, state) {
       if (state == "completed") {
