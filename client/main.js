@@ -1,8 +1,11 @@
 'use strict';
 const electron = require('electron');
 const fs = require('fs');
+const path = require('path');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+
+const collection = require("./collection");
 
 // Report crashes to our server.
 electron.crashReporter.start();
@@ -32,6 +35,8 @@ app.on('ready', function() {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
 
+  collection.make_necessary_directories();
+
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -41,7 +46,7 @@ app.on('ready', function() {
   });
 
   mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
-    item.setSavePath(`${__dirname}/games/` + item.getFilename());
+    item.setSavePath(path.join(collection.DOWNLOAD_ROOT, item.getFilename()));
     item.on('done', function(e, state) {
       if (state == "completed") {
         console.log("Download successful.");

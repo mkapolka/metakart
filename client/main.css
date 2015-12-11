@@ -44,6 +44,12 @@ h1 {
   bottom: 0;
 }
 
-#game-info-entry > form {
+#game-info-entry form {
   padding: 25px;
+}
+
+#game-info-entry button {
+  width: 150px;
+  height: 100px;
+  font-size: 24px;
 }

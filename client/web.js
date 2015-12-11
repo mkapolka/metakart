@@ -1,4 +1,5 @@
 $ = require("./ext/jquery-2.1.4.min.js");
+ipc = require("electron").ipcRenderer;
 const collection = require("./collection.js");
 
 $(function(){
@@ -21,6 +22,12 @@ $(function(){
   $("#webview").bind("did-get-response-details", function(e) {
     $("#navbar-url").val(e.target.src);
   })
+
+  $("#webview")[0].addEventListener("ipc-message", function(e) {
+    if (e.channel == "window-data") {
+      console.log(collection.game_from_current_page($("#webview").attr("src"), e.args[0]));
+    }
+  });
 
   collection.scan_existing_games();
 });

@@ -38,13 +38,14 @@
               </div>
             </header>
             <div class="window-content">
-              <webview id="webview" src="home.html"/>
+              <webview preload="./dom_relay.js" id="webview" src="home.html"/>
             </div>
             <div id="game-info-entry" class="window-content">
-              <form>
-                <label>Game Title: <input id="game-name" type="text" default="Game Title"/></label>
-                <button class="btn btn-primary">Save</button>
-              </form>
+                <div style="width: 33%; float: left;">
+                  <form>
+                    <label>Game Title: <input id="game-name" type="text" default="Game Title"/></label>
+                  </form>
+                </div>
             </div>
           </div>
         </div>

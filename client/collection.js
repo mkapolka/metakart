@@ -1,13 +1,30 @@
+const $ = require("./ext/jquery-2.1.4.min.js");
 const fs = require("fs");
 const path = require("path");
 
 var GAMES_ROOT = './games'
+var DOWNLOAD_ROOT = './downloads'
 
 function make_game(name, url, directory) {
   return {
     name: name,
     url: url,
     directory: directory
+  }
+}
+
+function game_from_url(url) {
+  
+}
+
+function game_from_current_page(url, html) {
+  // Check which website we're on
+  var itch_rex = /http:\/\/[a-z0-9-]+\.itch\.io\/[a-z0-9-]+/
+  if (itch_rex.exec(url)) {
+    var jq = $(html);
+    var game_id_rex = /itch.io\/([a-z0-9-]+)/;
+    var title = jq.find("h1.game_title").text();
+    return make_game(title, url, game_id_rex.exec(url)[1]);
   }
 }
 
@@ -22,6 +39,14 @@ function save_game_manifest(game) {
   });
 }
 
+function make_necessary_directories() {
+  if (fs.statSync(GAMES_ROOT) === undefined) {
+    fs.mkdir(GAMES_ROOT);
+  }
+  if (fs.statSync(DOWNLOAD_ROOT) === undefined) {
+    fs.mkdir(DOWNLOAD_ROOT);
+  }
+}
 
 function scan_existing_games() {
   fs.readdir(GAMES_ROOT, function(err, directories) {
@@ -43,5 +68,5 @@ function scan_existing_games() {
 }
 
 module.exports = {
-  make_game, scan_existing_games, save_game_manifest
+  make_game, scan_existing_games, save_game_manifest, make_necessary_directories, DOWNLOAD_ROOT, GAMES_ROOT, game_from_current_page
 }
