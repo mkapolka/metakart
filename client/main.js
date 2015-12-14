@@ -1,7 +1,11 @@
 'use strict';
-const electron = require('electron');
 const fs = require('fs');
 const path = require('path');
+
+const electron = require('electron');
+const ipcMain = electron.ipcMain;
+const zip = require('node-7z');
+
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 
@@ -13,6 +17,7 @@ electron.crashReporter.start();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let current_game;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -36,6 +41,9 @@ app.on('ready', function() {
   //mainWindow.webContents.openDevTools();
 
   collection.make_necessary_directories();
+  collection.scan_existing_games(function(games){
+    mainWindow.webContents.send('game-list-updated', games);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -45,7 +53,19 @@ app.on('ready', function() {
     mainWindow = null;
   });
 
+  ipcMain.on('game-metadata', function(event, arg) {
+    current_game = arg;
+    console.log("current game");
+    console.log(arg);
+    console.log(current_game);
+  });
+
   mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
+    console.log(current_game);
+    collection.save_game_manifest(current_game);
+    collection.scan_existing_games(function(games) {
+      mainWindow.webContents.send('games-list-updated', games);
+    });
     item.setSavePath(path.join(collection.DOWNLOAD_ROOT, item.getFilename()));
     item.on('done', function(e, state) {
       if (state == "completed") {
