@@ -4,7 +4,6 @@ const path = require('path');
 
 const electron = require('electron');
 const ipcMain = electron.ipcMain;
-const zip = require('node-7z');
 
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
@@ -55,21 +54,20 @@ app.on('ready', function() {
 
   ipcMain.on('game-metadata', function(event, arg) {
     current_game = arg;
-    console.log("current game");
-    console.log(arg);
-    console.log(current_game);
   });
 
   mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
-    console.log(current_game);
-    collection.save_game_manifest(current_game);
-    collection.scan_existing_games(function(games) {
-      mainWindow.webContents.send('games-list-updated', games);
+    collection.save_game_manifest(current_game, (error) => {
+      collection.scan_existing_games(function(games) {
+        mainWindow.webContents.send('games-list-updated', games);
+      });
     });
-    item.setSavePath(path.join(collection.DOWNLOAD_ROOT, item.getFilename()));
+    var download_location = path.join(collection.DOWNLOAD_ROOT, item.getFilename());
+    item.setSavePath(download_location);
+    console.log("Starting download of " + download_location + "...");
     item.on('done', function(e, state) {
       if (state == "completed") {
-        console.log("Download successful.");
+        collection.extract_game(download_location, current_game);
       } else {
         console.log("UH OH " + state);
       }
