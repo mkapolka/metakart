@@ -39,38 +39,25 @@ $(function(){
       $("#game-name").attr("value", game.name);
       $("#game-url").attr("value", game.url);
       $("#game-id").attr("value", game.directory);
-      collection.set_current_game(game);
       ipc.send('game-metadata', e.args[0]);
     }
   });
 
-  ipc.on('games-list-updated', function(event, message) {
-    for (game in message.args[0]) {
+  ipc.on('games-list-updated', function(event, games) {
+    console.log(games);
+    games.forEach((game) => {
       add_game_entry(game);
-    }
-  });
-
-  collection.scan_existing_games((games) => {
-    games.forEach((game) => {add_game_entry(game)});
-  });
-
-  remote.getCurrentWebContents().session.on('will-download', function(event, item, webContents) {
-    var current_game = collection.get_current_game();
-    //var current_game = collection.get_current_game();
-    collection.save_game_manifest(current_game);
-    add_game_entry(current_game);
-    item.setSavePath(path.join(collection.DOWNLOAD_ROOT, item.getFilename()));
-    item.on('done', function(e, state) {
-      if (state == "completed") {
-        console.log("Download successful.");
-      } else {
-        console.log("UH OH " + state);
-      }
     });
   });
 
+  collection.scan_existing_games((games) => {
+    console.log(games);
+    games.forEach((game) => {
+      add_game_entry(game);
+    });
+  });
 
-  $("#webview").bind('dom-ready', () => {$("#webview")[0].openDevTools();});
+  //$("#webview").bind('dom-ready', () => {$("#webview")[0].openDevTools();});
 });
 
 module.exports = {

@@ -40,9 +40,6 @@ app.on('ready', function() {
   //mainWindow.webContents.openDevTools();
 
   collection.make_necessary_directories();
-  collection.scan_existing_games(function(games){
-    mainWindow.webContents.send('game-list-updated', games);
-  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

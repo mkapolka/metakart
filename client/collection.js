@@ -9,10 +9,10 @@ var DOWNLOAD_ROOT = './downloads'
 
 let current_game = undefined;
 
-GameStates = {
-  Downloading = "downloading",
-  Downloaded = "downloaded",
-  Ready = "ready"
+var GameStates = {
+  Downloading: "downloading",
+  Downloaded: "downloaded",
+  Ready: "ready"
 }
 
 function set_current_game(game) {
@@ -78,7 +78,7 @@ function scan_existing_games(callback) {
         output.push(game)
       } else {
         var manifest_data = JSON.parse(data);
-        var game = make_game(manifest_data['name'], manifest_data['url'], manifest_data['directory']);
+        var game = make_game(manifest_data['name'], manifest_data['url'], directory);
         output.push(game)
       }
     });
@@ -89,9 +89,11 @@ function scan_existing_games(callback) {
 // file = archive file, game = game object that it'll be added to
 function extract_game(file, game) {
   var task = new zip();
-  task.extractFull(file, game.directory)
+  var extract_directory = path.join(GAMES_ROOT, game.directory);
+  console.log("Extracting " + file + " into " + extract_directory + "...");
+  task.extractFull(file, extract_directory)
     .then(function() {
-      console.log("donezo");
+      console.log("Done extracting " + file + " into " + extract_directory + ".");
     })
     .catch(function(error) {
       console.log(error);
