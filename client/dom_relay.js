@@ -16,10 +16,18 @@
     });
   }
 
+  function _slugify_string(string) {
+    var lower = string.toLowerCase();
+    lower = lower.replace(/[^a-z0-9 ]/g, '');
+    return lower.replace(/\s/g, "_");
+  }
+
   function game_from_current_page(url) {
     // Check which website we're on
     var itch_rex = /http:\/\/[a-z0-9-]+\.itch\.io\/[a-z0-9-]+/
     var itch_download_rex = /http:\/\/[a-z0-9-]+\.itch\.io\/[a-z0-9-]+\/download/
+    var glorious_trainwrecks_rex = /http:\/\/www.glorioustrainwrecks.com\/node\/\d+/
+
     if (itch_download_rex.exec(url)) {
       var game_id_rex = /itch.io\/([a-z0-9-]+)/;
       var title = $("span.object_title").text();
@@ -34,7 +42,6 @@
         method: "itch-download"
       }
     } else if (itch_rex.exec(url)) {
-      //var jq = $(html);
       var game_id_rex = /itch.io\/([a-z0-9-]+)/;
       var title = $("h1.game_title").text();
       if (!title) {
@@ -46,6 +53,15 @@
         directory: game_id_rex.exec(url)[1],
         method: "itch"
       };
+    } else if (glorious_trainwrecks_rex.exec(url)) {
+      // Check that we're on a game page
+      var title = $("div.left-corner h2:first").text()
+      return {
+        name: title,
+        url: url.href,
+        directory: _slugify_string(title),
+        method: "glorious_trainwrecks"
+      }
     }
   }
 

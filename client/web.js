@@ -1,15 +1,15 @@
+'use strict'
 const path = require("path");
-ipc = require("electron").ipcRenderer;
+const ipc = require("electron").ipcRenderer;
+const components = require("./components.js");
+const ReactDOM = require("react-dom");
+const React = require("react");
 
-$ = require("./ext/jquery-2.1.4.min.js");
+const $ = require("./ext/jquery-2.1.4.min.js");
 const collection = require("./collection.js");
 
-function add_game_entry(game) {
-  var entry = $(Handlebars.compile($("#game-entry-template").html())(game));
-  entry.mousedown(function(e) {
-    $("#webview").attr("src", game.url);
-  });
-  $("#game-group").append(entry);
+function render_game_list(games) {
+  ReactDOM.render(React.createElement(components.GameList, {games: games}), $("#game-group")[0]);
 }
 
 $(function(){
@@ -44,22 +44,12 @@ $(function(){
   });
 
   ipc.on('games-list-updated', function(event, games) {
-    console.log(games);
-    games.forEach((game) => {
-      add_game_entry(game);
-    });
+    render_game_list(games);
   });
 
   collection.scan_existing_games((games) => {
-    console.log(games);
-    games.forEach((game) => {
-      add_game_entry(game);
-    });
+    render_game_list(games);
   });
 
-  //$("#webview").bind('dom-ready', () => {$("#webview")[0].openDevTools();});
+  $("#webview").openDevTools();
 });
-
-module.exports = {
-  add_game_entry
-}

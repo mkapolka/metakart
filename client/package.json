@@ -24,6 +24,8 @@
   "homepage": "https://github.com/atom/electron-quick-start#readme",
   "devDependencies": {
     "electron-prebuilt": "^0.35.0",
-    "node-7z": "0.4.0"
+    "node-7z": "0.4.0",
+    "react": "0.14.3",
+    "react-dom": "0.14.3"
   }
 }

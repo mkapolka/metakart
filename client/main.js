@@ -17,6 +17,7 @@ electron.crashReporter.start();
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let current_game;
+let games_list = [];
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -40,6 +41,9 @@ app.on('ready', function() {
   //mainWindow.webContents.openDevTools();
 
   collection.make_necessary_directories();
+  collection.scan_existing_games((games) => {
+    games_list = games;
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -54,20 +58,30 @@ app.on('ready', function() {
   });
 
   mainWindow.webContents.session.on('will-download', function(event, item, webContents) {
-    collection.save_game_manifest(current_game, (error) => {
-      collection.scan_existing_games(function(games) {
-        mainWindow.webContents.send('games-list-updated', games);
-      });
+    var this_game = current_game;
+    games_list = games_list.concat([this_game]);
+
+    collection.save_game_manifest(this_game, (error) => {
+      mainWindow.webContents.send('games-list-updated', games_list);
     });
     var download_location = path.join(collection.DOWNLOAD_ROOT, item.getFilename());
     item.setSavePath(download_location);
     console.log("Starting download of " + download_location + "...");
+
     item.on('done', function(e, state) {
+      this_game.download_progress = undefined;
+      mainWindow.webContents.send('games-list-updated', games_list);
       if (state == "completed") {
-        collection.extract_game(download_location, current_game);
+        collection.extract_game(download_location, this_game);
       } else {
         console.log("UH OH " + state);
       }
+    });
+
+    item.on('updated', function() {
+      var progress = item.getReceivedBytes() / item.getTotalBytes(); 
+      this_game.download_progress = progress;
+      mainWindow.webContents.send('games-list-updated', games_list);
     });
   });
 });

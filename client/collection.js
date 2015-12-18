@@ -51,11 +51,11 @@ function save_game_manifest(game, callback) {
 }
 
 function make_necessary_directories() {
-  if (fs.statSync(GAMES_ROOT) === undefined) {
-    fs.mkdir(GAMES_ROOT);
+  if (!fs.existsSync(GAMES_ROOT)) {
+    fs.mkdirSync(GAMES_ROOT);
   }
-  if (fs.statSync(DOWNLOAD_ROOT) === undefined) {
-    fs.mkdir(DOWNLOAD_ROOT);
+  if (!fs.existsSync(DOWNLOAD_ROOT)) {
+    fs.mkdirSync(DOWNLOAD_ROOT);
   }
 }
 
